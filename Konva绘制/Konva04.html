@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+			padding: 0;margin: 0;
+		}
+	</style>
+	<script src="Konva1.6.3.js"></script>
+</head>
+<body>
+	<div id="demo"></div>
+	<script>
+		var stage = new Konva.Stage({
+			container : "demo",
+			width : window.innerWidth,
+			height : window.innerHeight
+		});
+
+		var layer = new Konva.Layer();
+		stage.add(layer);
+
+		var x0 = 1/8*window.innerWidth;
+		var y0 = 3/4*window.innerHeight;
+		console.log(x0);
+		console.log(y0);
+		var lines = new Konva.Line({
+			points : [x0,y0,x0+6/8*window.innerWidth,y0],
+			stroke : "#e3e33",
+			strokeWidth : 1
+		});
+		layer.add(lines);
+
+		var data = [{
+			name : "jan",val : 0.42,fill : "#a1c4fd"
+		},{
+			name : "feb",val : 0.84,fill : "#d4fc79"
+		},{
+			name : "mar",val : 0.64,fill : "#cfd9df"
+		},{
+			name : "apr",val : 0.43,fill : "#a6c0fe"
+		},{
+			name : "may",val : 0.68,fill : "#fa709a"
+		},{
+			name : "jun",val : 0.86,fill : "#a8edea"
+		}];
+
+		var step = 6/8*window.innerWidth/data.length;
+		data.forEach(function(ele,i){
+			var rect = new Konva.Rect({
+				x : x0+(1/4+i)*step,
+				y : y0-data[i].val*2/4*window.innerHeight,
+				height : data[i].val*2/4*window.innerHeight,
+				width : 1/2*step,
+				fill : data[i].fill,
+				cornerRadius : 15
+			});
+			layer.add(rect);
+			// console.log(data[i].val*2/4*window.innerHeight);
+			var txt = new Konva.Text({
+				x : x0+(1/4+i)*step,
+				y : y0-data[i].val*2/4*window.innerHeight-16,
+				fontSize : 16,
+				fontFamily : "Microsft Yahei",
+				stroke : data[i].fill,
+				align : "center",
+				width : step/2,
+				text : data[i].val*100+"%",
+				name : "txtTop"
+			});
+			layer.add(txt);
+
+			var txtBottom = new Konva.Text({
+				x : x0+(7/18+i)*step,
+				y : y0,
+				fontSize : 20,
+				fontFamily : "Microsft Yahei",
+				stroke : data[i].fill,
+				width : step/2,
+				text : data[i].name,
+			});
+			txtBottom.rotate(30);
+			layer.add(txtBottom);
+			layer.draw();
+
+		});
+		
+		stage.on("contentMouseover",function(){
+			layer.find("Rect").each(function(ele,i){
+				ele.y(y0);
+				ele.height(0);
+				ele.to({
+					duration : 1,
+					y : y0-data[i].val*2/4*window.innerHeight,
+					height : data[i].val*2/4*window.innerHeight
+				});
+			});
+			layer.find(".txtTop").each(function(ele,i){
+				ele.y((y0-16));
+				ele.to({
+					duration : 1,
+					y : y0-data[i].val*2/4*window.innerHeight-16,
+				});
+			});
+		});
+		
+	</script>
+</body>
+</html>

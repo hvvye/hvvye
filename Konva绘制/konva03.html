@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+			padding: 0;margin: 0;
+		}
+	</style>
+	<script src="Konva1.6.3.js"></script>
+	<script src="CircleText.js"></script>
+</head>
+<body>
+	<div id="container"></div>
+	<script>
+		var stage = new Konva.Stage({
+			container : "container",
+			width : window.innerWidth,
+			height : window.innerHeight
+		});
+
+		var cenX = window.innerWidth/2;
+		var cenY = window.innerHeight/2;
+
+		var innerRadius = 125;
+		var outRadius = 210;
+		var cenRadius = 65;
+		var ringRadius = 90;
+
+		var bgLayer = new Konva.Layer();
+
+		stage.add(bgLayer);
+
+		var innerCircle = new Konva.Circle({
+			x : cenX,
+			y : cenY,
+			radius : innerRadius,
+			stroke : "#ccc",
+			strokeWidth : 4,
+			dash : [10,4]
+		});
+
+		bgLayer.add(innerCircle);
+
+		var outCircle = new Konva.Circle({
+			x : cenX,
+			y : cenY,
+			radius : outRadius,
+			stroke : "#ccc",
+			strokeWidth : 4,
+			dash : [10,4]
+		});
+
+		bgLayer.add(outCircle);
+
+		var L1_circle = new CircleText({
+			x : cenX,
+			y : cenY,
+			innerRadius : cenRadius,
+			outerRadius : ringRadius,
+			innerFill : "#0088dd",
+			outerFill : "#e3e3e3",
+			fontSize : 40,
+			text : "H"
+		});
+		L1_circle.addToGroupOrLayer(bgLayer);
+
+
+		bgLayer.draw();
+
+		//////
+
+		var animateLayer = new Konva.Layer();
+		stage.add(animateLayer);
+
+		var animateGroup = new Konva.Group({
+			x : cenX,
+			y : cenY
+		});
+		animateLayer.add(animateGroup);
+
+		var L2_circle = new CircleText({
+			x : innerRadius*Math.cos(-60*Math.PI/180),
+		 	y : innerRadius*Math.sin(-60*Math.PI/180),
+			innerRadius : 28,
+			outerRadius : 34,
+			innerFill : "#ffa80b",
+			outerFill : "#e3e3e3",
+			text : "VV"
+		});
+		L2_circle.addToGroupOrLayer(animateGroup);
+
+		var L4_circle = new CircleText({
+			x : innerRadius*Math.cos(160*Math.PI/180),
+		 	y : innerRadius*Math.sin(160*Math.PI/180),
+			innerRadius : 28,
+			outerRadius : 34,
+			innerFill : "#e32525",
+			outerFill : "#e3e3e3",
+			text : "Y"
+		});
+		L4_circle.addToGroupOrLayer(animateGroup);
+
+		var L3_circle = new CircleText({
+			x : outRadius*Math.cos(75*Math.PI/180),
+		 	y : outRadius*Math.sin(75*Math.PI/180),
+			innerRadius : 28,
+			outerRadius : 34,
+			innerFill : "#00658f",
+			outerFill : "#e3e3e3",
+			text : "E"
+		});
+		L3_circle.addToGroupOrLayer(animateGroup);
+
+		animateLayer.draw();
+		var framepersecond = 60;
+		var animate = new Konva.Animation(function(frame){
+			var fps = framepersecond/1000*frame.timeDiff;
+			animateGroup.rotate(fps);
+			animateGroup.getChildren().each(function(ele,i){
+				ele.rotate(-fps);
+			});
+		},animateLayer);
+		animate.start();
+		animateLayer.on("mouseover",function(){
+			framepersecond = 10;
+		});
+		animateLayer.on("mouseout",function(){
+			framepersecond = 60;
+		});
+
+	</script>
+</body>
+</html>
